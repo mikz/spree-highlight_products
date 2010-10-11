@@ -22,9 +22,9 @@ module HighlightProducts
           redirect_to admin_products_url
         end
       end
-
+      
       Product.class_eval do
-        named_scope :highlighted, {:conditions => "products.highlighted_at is not null", :order => "highlighted_at DESC"}
+        scope :highlighted, where("products.highlighted_at is not null").order("highlighted_at DESC")
 
         def highlight
           self.update_attribute(:highlighted_at, Time.current)
@@ -32,6 +32,10 @@ module HighlightProducts
 
         def unhighlight
           self.update_attribute(:highlighted_at, nil)
+        end
+
+        def highlighted_at= val
+          self[:highlighted_at] = val
         end
 
         private
